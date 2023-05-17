@@ -33,14 +33,15 @@ rm -rf ./wget-*
 
 
 #####################
-# Get only the practically available fields:
-# - availability = not 1, 4, or 7 (= not available)
-# - num_participants & item_count > 0
+#  Extract using UKBB tools
 #####################
 
 
 cd "$DIR_HOME"
+# Decript and decompress - output: "enc_ukb" file
 "$DIR_SOFTWARE_UKBB"ukbunpack "$DIR_DATA_UKBB_4020457"ukb671006.enc "$DIR_DATA_UKBB_4020457"k62001r671006.key &
+# Convert
+"$DIR_SOFTWARE_UKBB"ukbconv "$DIR_DATA_UKBB_4020457"ukb671006.enc_ukb  &
 "$DIR_SOFTWARE_UKBB"ukbconv "$DIR_DATA_UKBB_4020457"ukb671006.enc_ukb csv &
 "$DIR_SOFTWARE_UKBB"ukbconv "$DIR_DATA_UKBB_4020457"ukb671006.enc_ukb docs &
 "$DIR_SOFTWARE_UKBB"ukbconv "$DIR_DATA_UKBB_4020457"ukb671006.enc_ukb bulk &
