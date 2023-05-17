@@ -49,6 +49,11 @@ mkdir -p "$DIR_DATA_UKBB_GENOTYPE_PGEN"
 DIR_DATA_UKBB_GENOTYPE_BED="$DIR_HOME"data/ukbb/4020457_671006_all/genotype/processed/22828_imp_gen_bed/
 mkdir -p "$DIR_DATA_UKBB_GENOTYPE_BED"
 
+DIR_DATA_UKBB_IMAGING="$DIR_HOME"data/ukbb/4020457_671006_all/imaging/
+mkdir -p "$DIR_DATA_UKBB_IMAGING"
+DIR_DATA_UKBB_IMAGING_RAW="$DIR_HOME"data/ukbb/4020457_671006_all/imaging/raw/
+mkdir -p "$DIR_DATA_UKBB_IMAGING_RAW"
+
 DIR_DATA_ACCEL="$DIR_HOME"data/accel/
 mkdir -p "$DIR_DATA_ACCEL"
 
@@ -80,23 +85,35 @@ DIR_DATA_ACCEL_UKBB="$DIR_HOME"data/accel_ukbb/
 mkdir -p "$DIR_DATA_ACCEL_UKBB"
 DIR_DATA_ACCEL_UKBB_SPLIT="$DIR_HOME"data/accel_ukbb/split/
 mkdir -p "$DIR_DATA_ACCEL_UKBB_SPLIT"
+DIR_DATA_ACCEL_UKBB_PLINK="$DIR_HOME"data/accel_ukbb/for_plink/
+mkdir -p "$DIR_DATA_ACCEL_UKBB_PLINK"
+DIR_DATA_ACCEL_UKBB_COVAR="$DIR_HOME"data/accel_ukbb/plink_covar/
+mkdir -p "$DIR_DATA_ACCEL_UKBB_COVAR"
 DIR_DATA_ACCEL_UKBB_WHITE="$DIR_HOME"data/accel_ukbb/white_british/
 mkdir -p "$DIR_DATA_ACCEL_UKBB_WHITE"
 
 DIR_MAGMA="$DIR_HOME"data/magma/
 mkdir -p "$DIR_MAGMA"
 
-# Codes
+DIR_REFSEQ="$DIR_HOME"data/refseq/
+mkdir -p "$DIR_REFSEQ"
 
+DIR_CRISPR="$DIR_HOME"data/triple_crispr/
+mkdir -p "$DIR_CRISPR"
+
+# Codes
 DIR_CODE_PREP="$DIR_HOME"code/prep/
 mkdir -p "$DIR_CODE_PREP"
 DIR_CODE_ANALYSIS="$DIR_HOME"code/analysis/
 mkdir -p "$DIR_CODE_ANALYSIS"
-
+DIR_CODE_ANALYSIS_SPECIFIC="$DIR_HOME"code/analysis/specific/
+mkdir -p "$DIR_CODE_ANALYSIS_SPECIFIC"
 
 # Analysis results
 DIR_ANALYSIS_PANUKBB_MAGMA="$DIR_HOME"analysis/panukbb_magma/
 mkdir -p "$DIR_ANALYSIS_PANUKBB_MAGMA"
+DIR_ANALYSIS_RESULT_SPECIFIC="$DIR_HOME"analysis/specific/
+mkdir -p "$DIR_ANALYSIS_RESULT_SPECIFIC"
 
 
 #####################
