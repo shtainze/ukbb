@@ -30,6 +30,8 @@ FILE_SOURCE = os.path.join(DIR_HOME, "data", "accel_ukbb",
 
 # Output
 DIR_OUT = os.path.join(DIR_HOME, "data", "accel_ukbb", "split")
+if not os.path.exists(DIR_OUT):
+    os.makedirs(DIR_OUT)
 
 # Chunk size (corresponding to the number of individuals) to be read at once
 chunk_size = 5000

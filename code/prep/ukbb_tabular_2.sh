@@ -6,7 +6,6 @@ set -e
 # Fill empty fields with the string "NA" to prevent errors.
 #####################
 
-
 source code/load_directory_tree.sh
 
 echo ""
@@ -22,7 +21,7 @@ echo "Scanning inside the directory" "$DIR_DATA_UKBB_TABULAR_PROCESSED"
 echo "Check if any field in any file is already "NA"..."
 echo "If everything is alright, only the file names are displayed"
 
-for FILE in $(find "$DIR_DATA_UKBB_TABULAR_PROCESSED" -type f -name "formatted*tsv"); do
+for FILE in $(find "$DIR_DATA_UKBB_TABULAR_PROCESSED" -type f -name "formatted*tsv" | sort); do
 echo $(date): "Scanning" $FILE
 cat "$FILE" | awk -F"\t" '{for (i=1; i<=NF; i++) if ($i == "NA") {print "Found NA in field " i " in row " NR; exit}}'
 cat "$FILE" | awk -F"\t" '{for (i=1; i<=NF; i++) if ($i == "NAN") {print "Found NA in field " i " in row " NR; exit}}'
@@ -35,7 +34,7 @@ done
 # Replace the empty fields with "NA"
 #####################
 
-FILE_HEADER="$DIR_DATA_UKBB_TABULAR_PROCESSED"formatted_0001.tsv
+FILE_HEADER=$(find "$DIR_DATA_UKBB_TABULAR_PROCESSED" -type f -name "formatted_0001.tsv")
 FILE_MERGED="$DIR_DATA_UKBB_TABULAR_PROCESSED"merged.txt
 
 echo ""

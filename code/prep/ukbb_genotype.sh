@@ -8,47 +8,51 @@ set -e
 
 source code/load_directory_tree.sh
 
+DIR_OUT="$DIR_DATA_UKBB_LATEST"
+
 
 #####################
 # Download
+# Due to the architecture of `gfetch`,
+#		the files are first downloaded to "$DIR_OUT"
+#	  (because it has a shorter path)
+#		and then moved to respective storage directories
 #####################
 
 echo ""
 echo $(date)
 echo "Start downloading UKBB genotype data..."
-echo "Output folder:" "$DIR_DATA_UKBB_4020457"
+echo "Output folder:" "$DIR_OUT"
+
+cd "$DIR_OUT"
+FILE_KEY=$(find ./ -name "*.key")
+echo "Using key:" "$FILE_KEY"
 
 # FAM file (chromosome number is required but does not matter)
 echo ""
 echo $(date)
 echo "Downloading the .fam file..."
-cd "$DIR_DATA_UKBB_4020457"
-rm -f ukb22418_c1_b0_v2_s488131.fam
-"$DIR_SOFTWARE_UKBB"gfetch \
-22418 -c1 -m \
--ak62001r671006.key
-chmod 777 ./ukb22418_c1_b0_v2_s488131.fam
-mv ./ukb22418_c1_b0_v2_s488131.fam "$DIR_DATA_UKBB_GENOTYPE_RAW"
+rm -f ./*.fam
+gfetch 22418 -c1 -m -a"$FILE_KEY"
+FILE_DOWNLOADED=$(find ./ -name "*.fam")
+chmod 777 "$FILE_DOWNLOADED"
+mv "$FILE_DOWNLOADED" "$DIR_DATA_UKBB_GENOTYPE_RAW"
 
 # Genotype call
 echo ""
 echo $(date)
 echo "Downloading the .bed file..."
-cd "$DIR_DATA_UKBB_4020457"
-"$DIR_SOFTWARE_UKBB"gfetch 22418 -c1 -ak62001r671006.key
-mv ./ukb22418_c1_b0_v2.bed "$DIR_DATA_UKBB_GENOTYPE_RAW"
-
-
+gfetch 22418 -c1 -a"$FILE_KEY" &
 # Imputation sample (chromosome number is required but does not matter)
 # Available for autosomes, chrX and chrXY.
-echo ""
-echo $(date)
 echo "Downloading the imputation samples..."
-cd "$DIR_DATA_UKBB_4020457"
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c1 -m -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -cX -m -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -cXY -m -ak62001r671006.key &
+gfetch 22828 -c1 -m -a"$FILE_KEY" &
+gfetch 22828 -cX -m -a"$FILE_KEY" &
+gfetch 22828 -cXY -m -a"$FILE_KEY" &
 wait
+
+FILE_DOWNLOADED=$(find ./ -name "*.bed")
+mv "$FILE_DOWNLOADED" "$DIR_DATA_UKBB_GENOTYPE_RAW"
 mv ./ukb22828_*.sample "$DIR_DATA_UKBB_GENOTYPE_RAW"
 
 
@@ -56,35 +60,34 @@ mv ./ukb22828_*.sample "$DIR_DATA_UKBB_GENOTYPE_RAW"
 echo ""
 echo $(date)
 echo "Downloading the imputation samples..."
-cd "$DIR_DATA_UKBB_4020457"
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c1 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c2 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c3 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c4 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c5 -ak62001r671006.key &
+gfetch 22828 -c1 -a"$FILE_KEY" &
+gfetch 22828 -c2 -a"$FILE_KEY" &
+gfetch 22828 -c3 -a"$FILE_KEY" &
+gfetch 22828 -c4 -a"$FILE_KEY" &
+gfetch 22828 -c5 -a"$FILE_KEY" &
 wait
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c6 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c7 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c8 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c9 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c10 -ak62001r671006.key &
+gfetch 22828 -c6 -a"$FILE_KEY" &
+gfetch 22828 -c7 -a"$FILE_KEY" &
+gfetch 22828 -c8 -a"$FILE_KEY" &
+gfetch 22828 -c9 -a"$FILE_KEY" &
+gfetch 22828 -c10 -a"$FILE_KEY" &
 wait
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c11 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c12 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c13 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c14 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c15 -ak62001r671006.key &
+gfetch 22828 -c11 -a"$FILE_KEY" &
+gfetch 22828 -c12 -a"$FILE_KEY" &
+gfetch 22828 -c13 -a"$FILE_KEY" &
+gfetch 22828 -c14 -a"$FILE_KEY" &
+gfetch 22828 -c15 -a"$FILE_KEY" &
 wait
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c16 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c17 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c18 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c19 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c20 -ak62001r671006.key &
+gfetch 22828 -c16 -a"$FILE_KEY" &
+gfetch 22828 -c17 -a"$FILE_KEY" &
+gfetch 22828 -c18 -a"$FILE_KEY" &
+gfetch 22828 -c19 -a"$FILE_KEY" &
+gfetch 22828 -c20 -a"$FILE_KEY" &
 wait
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c21 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -c22 -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -cX -ak62001r671006.key &
-"$DIR_SOFTWARE_UKBB"gfetch 22828 -cXY -ak62001r671006.key &
+gfetch 22828 -c21 -a"$FILE_KEY" &
+gfetch 22828 -c22 -a"$FILE_KEY" &
+gfetch 22828 -cX -a"$FILE_KEY" &
+gfetch 22828 -cXY -a"$FILE_KEY" &
 wait
 
 mv ./ukb22828_*.bgen "$DIR_DATA_UKBB_GENOTYPE_RAW_IMPGEN"
@@ -185,14 +188,16 @@ function single(){
 		echo "" 1>&2
 		echo "Start processing chromosome" "$i" 1>&2
 
-		str_command=\
+FILE_SAMPLE=$(find "$DIR_DATA_UKBB_GENOTYPE_RAW" -name "*c1*.sample")
+
+str_command=\
 "plink2 --make-pgen --bgen "\
 "$DIR_DATA_UKBB_GENOTYPE_RAW_IMPGEN"\
 "ukb22828_c"\
 "$i"\
 "_b0_v3.bgen ref-first --set-all-var-ids @:#[b37]\\\$r,\\\$a"\
 " --new-id-max-allele-len 100 missing"\
-" --sample ""$DIR_DATA_UKBB_GENOTYPE_RAW""ukb22828_c1_b0_v3_s487163.sample"\
+" --sample ""$FILE_SAMPLE"\
 " --oxford-single-chr ""$i"\
 " --geno --mind --maf --mach-r2-filter --remove-nosex"\
 " --rm-dup --exclude ""$DIR_DATA_UKBB_GENOTYPE_PGEN""exclude.txt"\
@@ -245,11 +250,12 @@ function single(){
 	else
 		flag_exec=1
 		echo "Proceed to (re-)calculation" 1>&2
+		FILE_SAMPLE=$(find "$DIR_DATA_UKBB_GENOTYPE_RAW" -name "*cX_*.sample")
 		plink2 --make-pgen \
 		--bgen "$DIR_DATA_UKBB_GENOTYPE_RAW_IMPGEN""ukb22828_cX_b0_v3.bgen" ref-first \
 		--set-all-var-ids @:#[b37]\$r,\$a \
 		--new-id-max-allele-len 100 missing \
-		--sample "$DIR_DATA_UKBB_GENOTYPE_RAW""ukb22828_cX_b0_v3_s486512.sample" \
+		--sample "$FILE_SAMPLE" \
 		--oxford-single-chr X \
 		--geno --mind --maf --mach-r2-filter --remove-nosex \
 		--rm-dup --exclude "$DIR_DATA_UKBB_GENOTYPE_PGEN""exclude.txt" \
@@ -277,11 +283,12 @@ function single(){
 	else
 		flag_exec=1
 		echo "Proceed to (re-)calculation" 1>&2
+		FILE_SAMPLE=$(find "$DIR_DATA_UKBB_GENOTYPE_RAW" -name "*cXY_*.sample")
 		plink2 --make-pgen \
 		--bgen "$DIR_DATA_UKBB_GENOTYPE_RAW_IMPGEN""ukb22828_cXY_b0_v3.bgen" ref-first \
 		--set-all-var-ids @:#[b37]\$r,\$a \
 		--new-id-max-allele-len 100 missing \
-		--sample "$DIR_DATA_UKBB_GENOTYPE_RAW""ukb22828_cXY_b0_v3_s486198.sample" \
+		--sample "$FILE_SAMPLE" \
 		--oxford-single-chr XY \
 		--geno --mind --maf --mach-r2-filter --remove-nosex \
 		--rm-dup --exclude "$DIR_DATA_UKBB_GENOTYPE_PGEN""exclude.txt" \
