@@ -7,7 +7,7 @@ set -e
 #####################
 
 
-source code/load_directory_tree.sh
+source code/load_directory_tree_202307.sh
 
 # Output: only the column for file links
 FILE_LINK="$DIR_DATA_PANUKBB_MANIFEST"download_links.tsv

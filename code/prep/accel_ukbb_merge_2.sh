@@ -12,15 +12,15 @@ set -e
 #####################
 
 
-source code/load_directory_tree.sh
+source code/load_directory_tree_202307.sh
 
 # Input
 FILE_UKBB="$DIR_DATA_UKBB_TABULAR_PROCESSED"merged.txt
 FILE_ACCEL="$DIR_DATA_ACCEL"formatted.txt
 # Lookup table sorted by the old eids
-FILE_LOOKUP_TABLE_SORTED_OLD="$DIR_DATA_ACCEL_UKBB_MERGING"pair_ids_sorted_old.csv
+FILE_LOOKUP_TABLE_SORTED_OLD="$DIR_DATA_ACCEL"pair_ids_sorted_old.csv
 # Lookup table sorted by the new eids
-FILE_LOOKUP_TABLE_SORTED_NEW="$DIR_DATA_ACCEL_UKBB_MERGING"pair_ids_sorted_new.csv
+FILE_LOOKUP_TABLE_SORTED_NEW="$DIR_DATA_ACCEL"pair_ids_sorted_new.csv
 
 # Join the lookup table
 # And put "eid" column to the 1st place
@@ -28,8 +28,12 @@ FILE_ACCEL_ID_MATCHED="$DIR_DATA_ACCEL_UKBB_MERGING"id_matched.txt
 FILE_ACCEL_ID_MATCHED_FORMATTED="$DIR_DATA_ACCEL_UKBB_MERGING"id_matched_formatted.txt
 
 # Final output
-FILE_OUT="$DIR_DATA_ACCEL_UKBB"ukbb671006_accel_merged.txt
-FILE_OUT_2="$DIR_DATA_ACCEL_UKBB"ukbb671006_accel_merged_formatted.txt
+# Merged file
+FILE_OUT="$DIR_DATA_ACCEL_UKBB"ukbb_accel_merged.txt
+# Merged and formatted
+FILE_OUT_2="$DIR_DATA_ACCEL_UKBB"ukbb_accel_merged_formatted.txt
+# Extraction of individuals with ACCEL entries
+FILE_OUT_3="$DIR_DATA_ACCEL_UKBB"ukbb_accel_accel_only.txt
 
 echo ""
 echo $(date) "Merge ACCEL data and the new UKBB basket"
@@ -114,13 +118,49 @@ echo ""
 echo $(date) "Fill NA for the entries not containing ACCEL data"
 echo "Output:" "$FILE_OUT_2"
 
-cat "$FILE_OUT" | awk -F'\t' -v OFS='\t' '{
-  if (NF == 28483) {
+FIELD_NUM_ALL=$(cat "$FILE_OUT" | head -n 100 | \
+  awk -F'\t' '{print NF}' | sort -n | tail -n 1)
+
+FIELD_NUM_NOACCEL=$((FIELD_NUM_ALL - 35))
+
+echo "$FIELD_NUM_ALL", "$FIELD_NUM_NOACCEL" "fields are found"
+
+cat "$FILE_OUT" | awk -F'\t' -v OFS='\t' \
+-v FIELD_NUM_ALL=$FIELD_NUM_ALL \
+-v FIELD_NUM_NOACCEL=$FIELD_NUM_NOACCEL \
+'{
+  if (NF == FIELD_NUM_ALL) {
     print $0
-  } else if (NF == 28448) {
+  } else if (NF == FIELD_NUM_NOACCEL) {
     print $0"\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA"
   }
 }' | sed 's/\r//g' > "$FILE_OUT_2"
+
+
+echo ""
+echo $(date) "Extraction of individuals with ACCEL entries"
+
+HEADER=$(head -n 1 "$FILE_OUT_2")
+IFS=$'\t' read -ra COLUMNS <<< "$HEADER"
+
+# Find column numbers for "eid_old"
+for i in "${!COLUMNS[@]}"; do
+  if [[ "${COLUMNS[i]}" == "eid_old" ]]; then
+    COL_NUMBER=$((i + 1))
+  fi
+done
+
+# Get the number of ACCEL entries
+# STR_COMMAND="cat "$FILE_OUT_2" | awk -F'\t' '{print \$"$COL_NUMBER"}' | awk '{if (\$0 != \"NA\") print \$0}' | wc -l"
+# echo "$STR_COMMAND"
+# N_INDIV=$(eval "$STR_COMMAND")
+
+echo "Column" "$COL_NUMBER" "contains ACCEL IDs. Extract the rows with non-NA entries in this column..."
+echo "Output:" "$FILE_OUT_3"
+
+STR_COMMAND="cat "$FILE_OUT_2" | awk -F'\t' -v OFS='\t' '{if (\$"$COL_NUMBER" != \"NA\") print \$0}' > "$FILE_OUT_3""
+eval "$STR_COMMAND"
+
 
 echo ""
 echo $(date) "Done."

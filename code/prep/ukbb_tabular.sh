@@ -6,7 +6,7 @@ set -e
 #####################
 
 
-source code/load_directory_tree.sh
+source code/load_directory_tree_202307.sh
 
 
 # #####################
@@ -87,20 +87,29 @@ FILE_FIELDS_TABLE_SORTED="$DIR_DATA_UKBB_SCHEMA_PROCESSED"field_exist_participan
 FILE_FIELDS_CURRENT_SORTED="$DIR_DATA_UKBB_SCHEMA_PROCESSED"field_id_only_allowed.txt
 FILE_FIELDS_LEFTOVER="$DIR_DATA_UKBB_SCHEMA_PROCESSED"field_id_only_not_allowed.txt
 
-# Final output - not-yet-downloaded fields and explanations
-FILE_OUT="$DIR_DATA_UKBB_SCHEMA_PROCESSED"field_not_allowed.txt
+# Final output - (not-yet-)downloaded fields and explanations
+FILE_OUT_1="$DIR_DATA_UKBB_SCHEMA_PROCESSED"field_allowed.txt
+FILE_OUT_2="$DIR_DATA_UKBB_SCHEMA_PROCESSED"field_not_allowed.txt
 
 echo $(date) "Extract the not-yet-downloaded fraction"
-sort "$FILE_FIELDS_CURRENT" > "$FILE_FIELDS_CURRENT_SORTED"
+echo "Output (fields only):"
+echo "$FILE_FIELDS_CURRENT_SORTED"
+echo "$FILE_FIELDS_LEFTOVER"
+echo "field_id" > "$FILE_FIELDS_CURRENT_SORTED"
+sort "$FILE_FIELDS_CURRENT" >> "$FILE_FIELDS_CURRENT_SORTED"
 echo "field_id" > "$FILE_FIELDS_LEFTOVER"
 diff -c "$FILE_FIELDS_ALL" "$FILE_FIELDS_CURRENT_SORTED" | awk '{if($0 ~ "^- .*") print substr($0, 3, 10)}' >> "$FILE_FIELDS_LEFTOVER"
 
+echo ""
+echo "Output (fields plus explanation):"
+echo "$FILE_OUT_1"
+echo "$FILE_OUT_2"
 cat "$FILE_FIELDS_TABLE" | head -n 1 > "$FILE_FIELDS_TABLE_SORTED"
 cat "$FILE_FIELDS_TABLE" | tail -n +2 | sort -t $'\t' -k1,1 >> "$FILE_FIELDS_TABLE_SORTED"
-join --header -t $'\t' "$FILE_FIELDS_LEFTOVER" "$FILE_FIELDS_TABLE_SORTED" > "$FILE_OUT"
-
-echo $(date) "Done output to:" "$FILE_OUT"
+join --header -t $'\t' "$FILE_FIELDS_CURRENT_SORTED" "$FILE_FIELDS_TABLE_SORTED" > "$FILE_OUT_1"
+join --header -t $'\t' "$FILE_FIELDS_LEFTOVER" "$FILE_FIELDS_TABLE_SORTED" > "$FILE_OUT_2"
 
 echo ""
 echo $(date) "Done."
 echo ""
+

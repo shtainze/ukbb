@@ -8,7 +8,7 @@ set -e
 #####################
 
 
-source code/load_directory_tree.sh
+source code/load_directory_tree_202307.sh
 
 rm -rf "$DIR_MAGMA"
 mkdir -p "$DIR_MAGMA"

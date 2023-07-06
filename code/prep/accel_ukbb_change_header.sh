@@ -10,8 +10,9 @@ set -e
 #####################
 
 
-source code/load_directory_tree.sh
+source code/load_directory_tree_202307.sh
 
+FILE_LIST_FILES="$DIR_DATA_ACCEL_UKBB"files.txt
 
 echo ""
 echo $(date) "Change the header row of UKBB+ACCEL dataset"
@@ -33,19 +34,31 @@ function check_int() {
 }
 
 
-for FILE_SOURCE in $(find "$DIR_DATA_ACCEL_UKBB_SPLIT" -type f -name "*.txt" | sort); do
-  FILE_OUT=$(echo "$FILE_SOURCE" | sed "s|$DIR_DATA_ACCEL_UKBB_SPLIT|$DIR_DATA_ACCEL_UKBB_PLINK|g")
-  check_int "$I_FILE" "$FILE_OUT"
+function func_main() {
+  dir_source=$1
+  dir_out=$2
+  echo "Process" "$dir_source" "->" "$dir_out"
+  for FILE_SOURCE in $(find $dir_source -type f -name "*.txt" | sort); do
+    FILE_OUT=$(echo "$FILE_SOURCE" | sed "s|$dir_source|$dir_out|g")
+    check_int "$I_FILE" "$FILE_OUT"
 
-  HEADER=$(cat "$FILE_SOURCE" | head -n 1 | sed 's/^eid/IID/g')
-  HEADER="FID ""$HEADER"
-  HEADER=$(echo "$HEADER" | sed "s: :\t:g")
-  echo "$HEADER" > "$FILE_OUT"
-  tail -n +2 "$FILE_SOURCE" | awk -F'\t' -v OFS='\t' '{print $1,$0}' >> "$FILE_OUT"
+    HEADER=$(cat "$FILE_SOURCE" | head -n 1 | sed 's/^eid/IID/g')
+    HEADER="FID ""$HEADER"
+    HEADER=$(echo "$HEADER" | sed "s: :\t:g")
+    echo "$HEADER" > "$FILE_OUT"
+    tail -n +2 "$FILE_SOURCE" | awk -F'\t' -v OFS='\t' '{print $1,$0}' >> "$FILE_OUT"
 
-  I_FILE=$(($I_FILE + 1))
-done
+    I_FILE=$(($I_FILE + 1))
+  done
+}
 
+# func_main "$DIR_DATA_ACCEL_UKBB_SPLIT_ALL" "$DIR_DATA_ACCEL_UKBB_PLINK_ALL"
+
+# echo ""
+# echo $(date) "Export file list:" "$FILE_LIST_FILES"
+# ls -1 "$DIR_DATA_ACCEL_UKBB_SPLIT_ALL" | sort > "$FILE_LIST_FILES"
+
+func_main "$DIR_DATA_ACCEL_UKBB_SPLIT_ACCEL" "$DIR_DATA_ACCEL_UKBB_PLINK_ACCEL"
 
 echo ""
 echo $(date) "Done."

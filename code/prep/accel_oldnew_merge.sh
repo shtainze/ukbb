@@ -10,7 +10,7 @@ set -e
 #####################
 
 
-source code/load_directory_tree.sh
+source code/load_directory_tree_202307.sh
 
 # Input: storage directory of old/new cwa files
 DIR_CWA_OLD=""
@@ -39,26 +39,26 @@ echo "Merge two ACCEL datasets"
 # List up new dataset files
 ##########################
 
-# echo ""
-# echo $(date)
-# echo "List up new files..."
+echo ""
+echo $(date)
+echo "List up new files..."
 
-# echo "file first_1000_chars" > "$FILE_LIST_NEW"
+echo "file first_1000_chars" > "$FILE_LIST_NEW"
 
-# # Find all files in the directory and its subdirectories
-# find "$DIR_CWA_NEW" -type f -name "*.cwa" | while IFS= read -r file; do
-#     # Get the file name
-#     file_name=$(basename "$file")
+# Find all files in the directory and its subdirectories
+find "$DIR_CWA_NEW" -type f -name "*.cwa" | while IFS= read -r file; do
+    # Get the file name
+    file_name=$(basename "$file")
     
-#     # # Read the first 1000 characters of the file
-#     # first_1000_chars=$(cat "$file" | head -c 1000000 | tail -c 1000) 
-#     # # Output the file name and the first 1000 characters to the output file
-#     # echo "$file_name" "$first_1000_chars" >> "$FILE_LIST_NEW"
+    # # Read the first 1000 characters of the file
+    # first_1000_chars=$(cat "$file" | head -c 1000000 | tail -c 1000) 
+    # # Output the file name and the first 1000 characters to the output file
+    # echo "$file_name" "$first_1000_chars" >> "$FILE_LIST_NEW"
 
-#     # Get sha256 sum of the first 10k letters
-#     sha256sum=$(cat "$file" | head -n 10000 | sha256sum | awk "{print \$1}")
-#     echo "$file_name" "$sha256sum" >> "$FILE_LIST_NEW"
-# done
+    # Get sha256 sum of the first 10k letters
+    sha256sum=$(cat "$file" | head -n 10000 | sha256sum | awk "{print \$1}")
+    echo "$file_name" "$sha256sum" >> "$FILE_LIST_NEW"
+done
 
 
 ##########################
@@ -66,24 +66,24 @@ echo "Merge two ACCEL datasets"
 ##########################
 
 
-# echo ""
-# echo $(date)
-# echo "Sort the lists for later merge..."
+echo ""
+echo $(date)
+echo "Sort the lists for later merge..."
 
-# echo "sha256 eid_old" | sed "s/ /\t/g" > "$FILE_LIST_OLD_SORTED"
-# cat "$FILE_LIST_OLD" | tail -n +2 | \
-# awk -v OFS='\t' '{print $2, $1}' | \
-# sed 's/_.*//g' | sort -k1 >> "$FILE_LIST_OLD_SORTED"
+echo "sha256 eid_old" | sed "s/ /\t/g" > "$FILE_LIST_OLD_SORTED"
+cat "$FILE_LIST_OLD" | tail -n +2 | \
+awk -v OFS='\t' '{print $2, $1}' | \
+sed 's/_.*//g' | sort -k1 >> "$FILE_LIST_OLD_SORTED"
 
-# echo "sha256 eid_new" | sed "s/ /\t/g" > "$FILE_LIST_NEW_SORTED"
-# cat "$FILE_LIST_NEW" | tail -n +2 | \
-# awk -v OFS='\t' '{print $2, $1}' | \
-# sed 's/_.*//g' | sort -k1 >> "$FILE_LIST_NEW_SORTED"
+echo "sha256 eid_new" | sed "s/ /\t/g" > "$FILE_LIST_NEW_SORTED"
+cat "$FILE_LIST_NEW" | tail -n +2 | \
+awk -v OFS='\t' '{print $2, $1}' | \
+sed 's/_.*//g' | sort -k1 >> "$FILE_LIST_NEW_SORTED"
 
-# echo "Match old/new ID pairs..."
-# # -a2: Output all the rows in the new dataset, no matter whether
-# #   corresponding entries are found in the old dataset
-# join -a2 "$FILE_LIST_OLD_SORTED" "$FILE_LIST_NEW_SORTED" > "$FILE_LIST_JOINED"
+echo "Match old/new ID pairs..."
+# -a2: Output all the rows in the new dataset, no matter whether
+#   corresponding entries are found in the old dataset
+join -a2 "$FILE_LIST_OLD_SORTED" "$FILE_LIST_NEW_SORTED" > "$FILE_LIST_JOINED"
 cat "$FILE_LIST_JOINED" | awk '{print $2,$3}' > "$FILE_ID_PAIRS"
 
 echo ""

@@ -6,7 +6,7 @@ set -e
 #####################
 
 
-source code/load_directory_tree.sh
+source code/load_directory_tree_202307.sh
 
 
 MODE=$1 # Supplied from command line

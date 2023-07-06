@@ -10,7 +10,7 @@ set -e
 #####################
 
 
-source code/load_directory_tree.sh
+source code/load_directory_tree_202307.sh
 
 # Input - ACCEL data
 FILE_ACCEL="$DIR_DATA_ACCEL"FEATURES_ABNORMAL_GROUP_NAME_NEW_RULE_RECORDING_INFO.txt

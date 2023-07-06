@@ -25,16 +25,20 @@ except:
 # Input
 # Assuming that the script was called from the home dirtectory
 DIR_HOME = os.getcwd()
-FILE_SOURCE = os.path.join(DIR_HOME, "data", "accel_ukbb", 
-    "ukbb671006_accel_merged_formatted.txt")
+DIR_WORK = os.path.join(DIR_HOME, "data", "ukbb", "4047708_673112_all")
+FILE_SOURCE_1 = os.path.join(DIR_WORK, "accel_ukbb", 
+    "ukbb_accel_merged_formatted.txt")
+FILE_SOURCE_2 = os.path.join(DIR_WORK, "accel_ukbb", 
+    "ukbb_accel_accel_only.txt")
 
 # Output
-DIR_OUT = os.path.join(DIR_HOME, "data", "accel_ukbb", "split")
-if not os.path.exists(DIR_OUT):
-    os.makedirs(DIR_OUT)
+DIR_OUT_1 = os.path.join(DIR_WORK, "accel_ukbb", "split")
+if not os.path.exists(DIR_OUT_1):
+    os.makedirs(DIR_OUT_1)
+DIR_OUT_2 = os.path.join(DIR_WORK, "accel_ukbb", "split_accel_only")
+if not os.path.exists(DIR_OUT_2):
+    os.makedirs(DIR_OUT_2)
 
-# Chunk size (corresponding to the number of individuals) to be read at once
-chunk_size = 5000
 
 print()
 print(datetime.now(), 
@@ -42,30 +46,16 @@ print(datetime.now(),
 
 
 #############
-# Prepare
-#############
-
-# Read the file
-reader = pd.read_csv(FILE_SOURCE, chunksize=50, dtype=str, delimiter='\t')
-# Get the column names
-df = reader.get_chunk(5)
-l_cols = df.columns
-print()
-print(len(l_cols), "columns are found")
-print(len(list(set(l_cols))), "of them have separate names")
-print("First 10:", l_cols[0:10])
-
-
-#############
-# Process
+# Function
 #############
 
 # Split into each column
-def func_split(df, l_cols, n):
+def func_split(df, l_cols, n, dir_out):
     for i in range(1, len(l_cols)):
         df_write = df[l_cols[[0,i]]]
-        filename = "ukb671006_" + '{:0=5}'.format(i) + "_" + l_cols[i] + ".txt"
-        filename = os.path.join(DIR_OUT, filename)
+        # Filename example: "13188_20230-0.70.txt"
+        filename = '{:0=5}'.format(i) + "_" + l_cols[i] + ".txt"
+        filename = os.path.join(dir_out, filename)
         if n == 0:
             df_write.to_csv(filename,
              index=False, na_rep='NA', sep='\t')
@@ -73,20 +63,36 @@ def func_split(df, l_cols, n):
             df_write.to_csv(filename,
              index=False, na_rep='NA', sep='\t', mode='a', header=False)
 
-# Preprocess all
-print(datetime.now(), "Start processing with chunk size =", chunk_size)
+def func_main(file_source, dir_out):
+    print("Input:", file_source, "Output:", dir_out)
+    # Read the file
+    reader = pd.read_csv(file_source, 
+        chunksize=50, dtype=str, delimiter='\t')
+    # Get the column names
+    df = reader.get_chunk(5)
+    l_cols = df.columns
+    print()
+    print(len(l_cols), "columns are found")
+    print(len(list(set(l_cols))), "of them have separate names")
+    print("First 10:", l_cols[0:10])
+    # Main processing
+    print(datetime.now(), "Start splitting into two-column files")
+    # Re-initialize
+    reader = pd.read_csv(file_source, 
+        chunksize=5000, dtype=str, delimiter='\t')
+    # Process all
+    print("Processing file No:")
+    n = 0
+    for r in reader:
+        print(datetime.now(), n)
+        func_split(r, l_cols, n, dir_out)
+        n += 1
+    print()
+    print(datetime.now())
+    print("Done.")
 
-# Re-initialize
-reader = pd.read_csv(FILE_SOURCE, 
-    chunksize=chunk_size, dtype=str, delimiter='\t')
 
-print("Processing file No:")
-n = 0
-for r in reader:
-    print(datetime.now(), n)
-    func_split(r, l_cols, n)
-    n += 1
+func_main(FILE_SOURCE_1, DIR_OUT_1)
+func_main(FILE_SOURCE_2, DIR_OUT_2)
 
-print()
-print(datetime.now())
-print("Done.")
+
