@@ -1,0 +1,28 @@
+./20230427_01_ACCEL_cancer.ipynb
+    "# Convert categorical variables to one-hot\n",
+
+./20230427_01_ACCEL_cancer.ipynb
+    "# Convert categorical variables to one-hot\n",
+
+./20230427_01_ACCEL_cancer.ipynb ./.ipynb_checkpoints/20230510_01_ACCEL_cancer-checkpoint.ipynb
+    "# Make a one-hot table\n",
+
+./.ipynb_checkpoints/20230510_01_ACCEL_cancer-checkpoint.ipynb
+    "# Convert categorical variables to one-hot\n",
+
+./.ipynb_checkpoints/20230510_01_ACCEL_cancer-checkpoint.ipynb
+
+./.ipynb_checkpoints/20230427_01_ACCEL_cancer-checkpoint.ipynb
+    "# Convert categorical variables to one-hot\n",
+
+./.ipynb_checkpoints/20230427_01_ACCEL_cancer-checkpoint.ipynb
+    "# Convert categorical variables to one-hot\n",
+
+./.ipynb_checkpoints/20230427_01_ACCEL_cancer-checkpoint.ipynb ./20230510_01_ACCEL_cancer.ipynb
+    "# Make a one-hot table\n",
+
+./20230510_01_ACCEL_cancer.ipynb
+    "# Convert categorical variables to one-hot\n",
+
+./20230510_01_ACCEL_cancer.ipynb
+
