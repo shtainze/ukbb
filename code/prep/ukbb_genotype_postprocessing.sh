@@ -128,7 +128,7 @@ echo ""
 plink2 \
 --pca allele-wts 30 approx \
 --pfile "$DIR_PFILE""$SUFFIX"".LDpruned" \
---read-freq "$DIR_PFILE""$SUFFIX"".LDpruned.freq" \
+--read-freq "$DIR_PFILE""$SUFFIX"".LDpruned.freq.afreq" \
 --out "$DIR_PFILE""$SUFFIX"".pca"
 
 
