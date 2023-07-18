@@ -32,10 +32,10 @@ FILE_SOURCE_2 = os.path.join(DIR_WORK, "accel_ukbb",
     "ukbb_accel_accel_only.txt")
 
 # Output
-DIR_OUT_1 = os.path.join(DIR_WORK, "accel_ukbb", "split")
+DIR_OUT_1 = os.path.join(DIR_WORK, "accel_ukbb", "split", "all")
 if not os.path.exists(DIR_OUT_1):
     os.makedirs(DIR_OUT_1)
-DIR_OUT_2 = os.path.join(DIR_WORK, "accel_ukbb", "split_accel_only")
+DIR_OUT_2 = os.path.join(DIR_WORK, "accel_ukbb", "split", "accel_only")
 if not os.path.exists(DIR_OUT_2):
     os.makedirs(DIR_OUT_2)
 
@@ -92,7 +92,7 @@ def func_main(file_source, dir_out):
     print("Done.")
 
 
-func_main(FILE_SOURCE_1, DIR_OUT_1)
-func_main(FILE_SOURCE_2, DIR_OUT_2)
+# func_main(FILE_SOURCE_1, DIR_OUT_1)
+# func_main(FILE_SOURCE_2, DIR_OUT_2)
 
 

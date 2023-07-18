@@ -26,16 +26,16 @@ DIR_OUT="$DIR_DATA_UKBB_LATEST"
 # Merge them all without filtering
 #####################
 
-bash "$DIR_CODE_PREP""ukbb_genotype_merge_all.sh" \
-"$DIR_DATA_UKBB_GENOTYPE_RAW" \
-"$DIR_DATA_UKBB_GENOTYPE_RAW_IMPGEN" \
-"$DIR_DATA_UKBB_GENOTYPE_PGEN" \
-"$DIR_DATA_ACCEL_UKBB_WHITE"
+# bash "$DIR_CODE_PREP""ukbb_genotype_merge_all.sh" \
+# "$DIR_DATA_UKBB_GENOTYPE_RAW" \
+# "$DIR_DATA_UKBB_GENOTYPE_RAW_IMPGEN" \
+# "$DIR_DATA_UKBB_GENOTYPE_PGEN" \
+# "$DIR_DATA_ACCEL_UKBB_WHITE"
 
-# Postprocessing
-bash "$DIR_CODE_PREP""ukbb_genotype_postprocessing.sh" \
-"$DIR_DATA_UKBB_GENOTYPE_PGEN" \
-"merged"
+# # Postprocessing
+# bash "$DIR_CODE_PREP""ukbb_genotype_postprocessing.sh" \
+# "$DIR_DATA_UKBB_GENOTYPE_PGEN" \
+# "merged"
 
 
 #####################
@@ -95,6 +95,26 @@ plink2 \
 # Postprocessing
 bash "$DIR_CODE_PREP""ukbb_genotype_postprocessing.sh" \
 "$DIR_DATA_UKBB_GENOTYPE_WHITE_QC" \
+"merged"
+
+
+#####################
+# Extract population with ACCEL dataset
+#####################
+
+echo ""
+echo $(date) "Extract population with ACCEL dataset"
+echo ""
+
+plink2 \
+--make-pgen \
+--pfile "$DIR_DATA_UKBB_GENOTYPE_WHITE_QC""merged" \
+--geno --mind --maf --mach-r2-filter \
+--out "$DIR_DATA_UKBB_GENOTYPE_WHITEACCEL_QC""merged"
+
+# Postprocessing
+bash "$DIR_CODE_PREP""ukbb_genotype_postprocessing.sh" \
+"$DIR_DATA_UKBB_GENOTYPE_WHITEACCEL_QC" \
 "merged"
 
 

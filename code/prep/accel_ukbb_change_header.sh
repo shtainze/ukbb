@@ -13,12 +13,7 @@ set -e
 source code/load_directory_tree_202307.sh
 
 FILE_LIST_FILES="$DIR_DATA_ACCEL_UKBB"files.txt
-
-echo ""
-echo $(date) "Change the header row of UKBB+ACCEL dataset"
-echo ""
-
-I_FILE=1
+FILE_ACCEL_ID="$DIR_DATA_ACCEL_UKBB_PLINK"ACCEL_id.txt
 
 
 # Display a message only if:
@@ -38,7 +33,7 @@ function func_main() {
   dir_source=$1
   dir_out=$2
   echo "Process" "$dir_source" "->" "$dir_out"
-  for FILE_SOURCE in $(find $dir_source -type f -name "*.txt" | sort); do
+  for FILE_SOURCE in $(find "$dir_source" -type f -name "*.txt" | sort); do
     FILE_OUT=$(echo "$FILE_SOURCE" | sed "s|$dir_source|$dir_out|g")
     check_int "$I_FILE" "$FILE_OUT"
 
@@ -52,13 +47,32 @@ function func_main() {
   done
 }
 
-# func_main "$DIR_DATA_ACCEL_UKBB_SPLIT_ALL" "$DIR_DATA_ACCEL_UKBB_PLINK_ALL"
+echo ""
+echo $(date) "Change the header row of UKBB+ACCEL dataset"
 
-# echo ""
-# echo $(date) "Export file list:" "$FILE_LIST_FILES"
-# ls -1 "$DIR_DATA_ACCEL_UKBB_SPLIT_ALL" | sort > "$FILE_LIST_FILES"
 
+echo ""
+echo $(date) "Whole population"
+I_FILE=1
+func_main "$DIR_DATA_ACCEL_UKBB_SPLIT_ALL" "$DIR_DATA_ACCEL_UKBB_PLINK_ALL"
+
+
+echo ""
+echo $(date) "ACCEL population"
+I_FILE=1
 func_main "$DIR_DATA_ACCEL_UKBB_SPLIT_ACCEL" "$DIR_DATA_ACCEL_UKBB_PLINK_ACCEL"
+
+
+echo ""
+echo $(date) "Export file list:" "$FILE_LIST_FILES"
+ls -1 "$DIR_DATA_ACCEL_UKBB_SPLIT_ALL" | sort > "$FILE_LIST_FILES"
+
+
+echo ""
+echo $(date) "Export ACCEL population ID list:" "$FILE_ACCEL_ID"
+FILE_SOURCE=$(find "$DIR_DATA_ACCEL_UKBB_PLINK_ACCEL" -type f -name "*00001_*.txt")
+cat "$FILE_SOURCE" | tail -n +2 | awk -F'\t' '{print $1,$2}' > "$FILE_ACCEL_ID"
+
 
 echo ""
 echo $(date) "Done."
