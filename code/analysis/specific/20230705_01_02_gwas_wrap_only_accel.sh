@@ -3,7 +3,7 @@ set -e
 
 
 #####################
-# Wrapper of 20230529_01_gwas_single.sh
+# Wrapper of gwas_single.sh
 #   to conduct multiple GWAS with the same pipeline
 #####################
 
